@@ -1,2 +1,2 @@
 # WebGameLibrary
-JS library used to make 2D video games 
+JS files used to make 2D video games using <canvas> tag 
