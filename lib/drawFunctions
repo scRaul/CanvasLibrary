@@ -1,25 +1,46 @@
-const _func_color = new Color(255);
-function makePointGrid(n=-1,screen=null,pen=null) {
-    if(!screen instanceof Screen) return;
-    var range = screen.getIncrements();
-    if(n < 1){
-        n = range;
-    }
-    var step =range / n;
-    for(let y = range; y > -range; y-=step ){
-        for(let x = -range; x < range;x+=step){
-            var pos = new Vec(x,y);
-            if(pen instanceof ScreenObj){
-                pen.teleport(pos);
-                screen.drawScreenObject(pen);
-            }else{
-                screen.drawPoint(pos,_func_color);
-            }
+const _func_color = new Color(0,255,255);
+//move drawing to screen class
+function getGrid(n){
+    if (n <= 0) n = 1;
+    var l = 1;
+    var step = l / n;
+    var xStart = l / -2 + (l / 2) / n;
+    var yStart = xStart * -1;
+    var points = [];
+    for (let i = 0; i < n; i++) {
+        var y = yStart - (step * i);
+        for (let j = 0; j < n; j++) {
+            var x = xStart + (step * j);
+            points.push(new Vec(x,y)); // keep at 0 then update to 1 after scaling
         }
     }
+    return points;
+}
+function drawPointGrid(n=-1,screen=null,pen=null) {
+    if(!screen instanceof Screen) return;
+    var range = screen.getIncrements();
+    var points = flower(n); 
+    points.forEach(p =>{
+        var pos = vMath(p,'*',range);
+        pos.z = 1;//scale z back down to 1 
+        if(pen instanceof ScreenObj){
+            pos = vMath(p,'*',pen.getWidth()*(range/30));
+            pos.z = 1; //scale z back down to 1 
+            var trans = pen.getWorldMatrix();
+            console.log(pos);
+            pos = vMath(trans,'*',pos);
+            console.log(pos);
+            var temp = new ScreenObj();
+            temp.copyData(pen);
+            temp.teleport(pos);
+            screen.drawScreenObject(temp);
+        }else{
+            screen.drawPoint(pos,_func_color);
+        }
+    });
     screen.render();
 }
-function makeLineGrid(n=-1,screen=null,pen=null) {
+function drawLineGrid(n=-1,screen=null,pen=null) {
     if(!screen instanceof Screen) return;
     var range = screen.getIncrements();
     if(n < 1){
@@ -135,19 +156,6 @@ function makeExp(n) {
     return points;
 
 }
-function makeLine(n) {
-    var step = .1 / n;
-    if (step == 0) step = .1;
-    if (step < 0) step *= -1;
-    var points = [];
-
-    for (let i = -1; i < 1; i += step) {
-        var x = i;
-        var y = n * x;
-        points.push(x); points.push(y);
-    }
-    return points;
-}
 function makeCos(n) {
     var step = .1 / n;
     if (step == 0) step = .1;
@@ -169,11 +177,8 @@ function flower(n) {
     for (let i = 0; i < 2 * Math.PI; i += step) {
         var x = a * Math.cos(n * i) * Math.cos(i);
         var y = a * Math.cos(n * i) * Math.sin(i);
-
-        points.push(x); points.push(y);
+        points.push(new Vec(x,y));
     }
-
-
     return points;
 }
 function projectile(n) {

@@ -15,7 +15,7 @@ var traceScreen = new Screen(500,500,increments);
 var screen = new Screen(500,500,increments);
 
 var testImg = new ScreenObj();
-testImg.setSize(increments/2,increments/2);
+testImg.setSize(increments,increments);
 testImg.setColor(new Color(0,0,0,0));
 testImg.addImageSrc("test.png");
 
@@ -57,26 +57,44 @@ async function updateAndRender(){
 function handleInput(){
  if(input.keys.d == true){
     input.keys.d = false;
-    makeTriangle(2,screen);
+    drawPointGrid(5,screen,pen);
  }
 }
-
+var firstDown = true;
 function drawInput(){
     if(input.mouseDown == true){
        fps = fpsMovement;
        pen.teleport(input.getMousePositon());
-       screen.drawScreenObject(pen);
+       drawPointGrid(5,screen,pen);
+    //    screen.drawScreenObject(pen);
        var v = input.getMousePositon();
        v.z =1; v.w = 1;
        pointList.push(v);
        pointListB.push(v);
-       if(pointList.length >  10){
-            screen.drawBSpline(pointList,pen.getColor(),pen);
-            pointList = [];
+       if( firstDown ){
+        pointList.push(v);
+        pointListB.push(v);
+        pointList.push(v);
+        pointListB.push(v);
+        pointList.push(v);
+        pointListB.push(v);
+        firstDown = false;
        }
-       if(pointListB.length > 100){
+       if(pointList.length >11){
+            screen.drawBSpline(pointList,pen.getColor(),pen);
+            v = pointList[[pointList.length-1]];
+            pointList = [];
+            pointList.push(v);
+            pointList.push(v);
+            pointList.push(v);
+       }
+       if(pointListB.length >99){
             screen.drawBSpline(pointListB,pen.getColor(),pen);
+            v = pointList[[pointList.length-1]];
             pointListB = [];
+            pointListB.push(v);
+            pointListB.push(v);
+            pointListB.push(v);
        }
     }else{
         firstDown = true;
@@ -88,11 +106,18 @@ function drawInput(){
 function olInput(){
     if(input.mouseDown == true){
         input.mouseDown = false;
+
         pen.teleport(input.getMousePositon());
         screen.drawScreenObject(pen);
         var v = input.getMousePositon();
         v.z =1; v.w = 1;
+        
         pointListB.push(v);
+        if(firstDown == true ){
+            pointListB.push(v);
+            pointListB.push(v);
+            pointListB.push(v);
+        }
     }
 }
 function clearScreen(){
@@ -119,6 +144,10 @@ function toggleMode(){
     }
 }
 function generateOutline(){
+    firstDown = false;
+    pointListB.push(pointListB[pointListB.length-1]);
+    pointListB.push(pointListB[pointListB.length-1]);
+    pointListB.push(pointListB[pointListB.length-1]);
     if(pointListB.length > 0){
         screen.drawBSpline(pointListB,pen.getColor(),pen);
         pointListB = [];
