@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebGameLibraryTesting</title>
 
-    <script src="lib/input.js"></script>
-    <script src="lib/math.js"></script>
-    <script src="lib/screen.js"></script>
-    <script src="lib/screenObj.js"></script>
-    <script src="lib/drawFunctions"></script>
+    <script src="lib/Input.js"></script>
+    <script src="lib/vMath.js"></script>
+    <script src="lib/Screen.js"></script>
+    <script src="lib/ScreenObj.js"></script>
+    <script src="lib/pointDistrbutions.js"></script>
     <script src="app.js" defer></script>
 
     <link rel="stylesheet" href="style.css">
@@ -24,11 +24,10 @@
         <label for="pxSize">Pixel Size</label>
         <input type="number" id="pxSize" value="1" max="25" min="1">
         <button id="clearButton"> erase All </button>
-        <input type="checkbox" id="olMode" value="trace">
-        <label for="olMode">Out line mode</label>
-        <button id="olButton"> create outline </button>
         <input type="checkbox" id="traceMode" value="trace">
         <label for="traceMode">trace mode</label>
+        <input type="file" id="userImage" name="userImage"
+       accept="image/png, image/jpeg">
     </div>
     
 </body>
