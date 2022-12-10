@@ -1,7 +1,33 @@
 body{
     text-align: center;
 }
+#screens{
+    width: 100%;
+    height: 500px;
+    margin: 10px auto;
+    position: relative;
+    border: 2px solid red;
+}
 canvas{
     position: absolute;
-    margin-top: 20px;
+}
+#bottomCntrls{
+    display: flex;
+    flex-direction: column;
+
+}
+#verts{
+    display: flex;
+    flex-wrap: wrap;
+}
+#la{
+    background-color: aqua;
+    display: block;
+    text-align: center;
+}
+h2{
+    margin: 0;
+}
+h5{
+    margin: 0;
 }

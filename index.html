@@ -21,13 +21,59 @@
     <div id="controls">
         <label for="colorSelect">Pen Color:</label>
         <input type="color" id="penColor" value="#0000ff">
-        <label for="pxSize">Pixel Size</label>
+        <label for="pxSize">Pen Size</label>
         <input type="number" id="pxSize" value="1" max="25" min="1">
         <button id="clearButton"> erase All </button>
+        <input type="checkbox" id="gridMode" value="trace">
+        <label for="gridMode">show grid</label>
         <input type="checkbox" id="traceMode" value="trace">
         <label for="traceMode">trace mode</label>
         <input type="file" id="userImage" name="userImage"
        accept="image/png, image/jpeg">
+    </div>
+    <div id="screens">
+        <canvas id="canvas3"></canvas>
+        <canvas id="canvas2"></canvas>
+        <canvas id="canvas"></canvas>
+    </div>
+    <input type="checkbox" id="functionMode" value="trace">
+    <label for="traceMode">function mode</label>
+    <div id="bottomCntrls">
+        <h5>1.  Select a Functions</h5>
+        <div id="'verts">
+            <input type="radio" id="Triangle" name="Shape"  >
+            <label for="Triangle">Triangle Formation</label>
+            <input type="radio" id="Square" name="Shape" >
+            <label for="Square">Grid</label>
+            <input type="radio" id="Rings" name="Shape" >
+            <label for="Square">Rings</label>
+            <input type="radio" id="sunflower" name="Shape"  >
+            <label for="Square">Sunflower</label>
+            <input type="radio" id="turnFraction" name="Shape">
+            <label for="Square">Turn Fraction</label>
+            <br>
+            <input type="radio" id="Exponential" name="Shape"  >
+            <label for="Square">Exponential</label>
+            <input type="radio" id="Wave" name="Shape">
+            <label for="Square">Wave</label>
+            <input type="radio" id="Flower" name="Shape">
+            <label for="Square">Flower</label>
+            <input type="radio" id="Projectile" name="Shape">
+            <label for="Square">Projectile</label>
+        </div>  
+        <h5>2. Enter an input for the function </h5>
+        <input class="center" name="nInput" id="nInput" type="number" value="10" >
+        <h5>3. Select a style  </h5>
+        <div id="drawMode" >
+            <input type="radio" id="sPoints" name="dtype" >
+            <label for="Triangle">Points</label>
+            <input type="radio" id="sLines" name="dtype"  >
+            <label for="Lines">Lines</label>
+            <input type="radio" id="sTriangle" name="dtype" >
+            <label for="sTriangle">Trainglulate</label>
+        </div>
+        <h5>4. set the area size:  </h5>
+        <input class="center" name="nInput" id="areaInput" type="number" value="6" >
     </div>
     
 </body>
