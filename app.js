@@ -1,5 +1,6 @@
 //MVP drawing app to test out canvas libray
 
+// get references to html elements 
 document.getElementById('clearButton').addEventListener('click',clearScreen);
 var pxSizeInput = document.getElementById('pxSize');
 var penColorInput = document.getElementById('penColor');
@@ -9,6 +10,7 @@ var gridMode = document.getElementById('gridMode');
 var funcMode = document.getElementById('functionMode');
 var bottmCntrls = document.getElementById('bottomCntrls');
 
+// set up event listeners 
 pxSizeInput.addEventListener('change',setPenSize);
 penColorInput.addEventListener('change',setPenColor);
 traceMode.addEventListener('change',toggleMode);
@@ -17,33 +19,47 @@ userImage.addEventListener('change',setImage);
 funcMode.addEventListener('change',toggleMode);
 
 
+// set up 3 screens, one main for drawing, 1 for displaying a background image, as a grid
 var increments = 500;
 var traceScreen = new Screen(500,500,increments,'canvas3');
 var gridScreen = new Screen(500,500,increments,'canvas2');
 var screen = new Screen(500,500,increments,'canvas');
+//clear screen to default color 
 gridScreen.clearColor();
+// draw a 25 x 25 grid 
 gridScreen.drawLineGrid(25,new Color(255,255,255,80));
+// render the grid
 gridScreen.render();
+// hidden util checkbox clicked 
 gridScreen.hide();
+
+// create an object, this is where the background image will be 
 var traceImg = new ScreenObj();
-traceImg.setSize(increments,increments);
+// scale image to size of grid 
+traceImg.setSize(increments/2,increments/2);
+// make object tranparent 
 traceImg.setColor(new Color(0,0,0,0));
-traceImg.addImageSrc("test.png");
-
-var input = new Input();
+// add and image to the object
+traceImg.setImageSrc("test.png");
+// pen will be used to store the color and line width 
 var pen = new ScreenObj();
-screen.clearColor();
-input.addScreen(screen);
 
+// create an input object listening to mouse
+var input = new Input();
+input.setScreen(screen);//detect when mouse interact with screen 
+
+// will keep track of points where the use touched
 var pointList = [];
-var pointListB = [];
-const fpsDefault = 10; 
-const fpsMovement = 120;
-var fps = fpsDefault;
+var pointListB = [];//back up list 
 
-setPenColor();
-updateAndRender();
-toggleMode();
+const fpsDefault = 10; // used to slow down the update the upadate and render loop
+const fpsMovement = 120; // used to speed up the update for loop
+var fps = fpsDefault;
+screen.clearColor(); // set default clear color 
+
+setPenColor(); // check color 
+toggleMode(); // check checkBoxes
+updateAndRender(); // begin 
 async function updateAndRender(){
     var delay = 1000/fps;
     var startTime = Date.now();
@@ -51,7 +67,8 @@ async function updateAndRender(){
     screen.render();
     traceScreen.render();
     if(traceMode.checked){
-        traceScreen.draw([traceImg],DRAW_MODE.SCREENOBJ);
+        // draw the traceImg object 
+        traceScreen.draw([traceImg],DRAW_MODE.SCREENOBJ,10,new Color(255));
     }
     await new Promise(r => setTimeout(r,(startTime+delay)-Date.now() ));
     updateAndRender();
@@ -59,15 +76,16 @@ async function updateAndRender(){
 function drawInput(){
     if(input.mouseDown == true){
         fps = fpsMovement;
-        var v = input.getMousePositon();
-        v.z =1; v.w = 1;
+        var v = input.getMousePositon(); 
         pen.teleport(v);
-        pointList.push(v);
+        pointList.push(v); 
         pointListB.push(v);
-        if(funcMode.checked)
+        if(funcMode.checked) 
             checkInput();
+        // draw a single point 
         screen.draw([v],DRAW_MODE.POINT,pen.getWidth(),pen.getColor());
        if(pointList.length >11){
+        //draw a list of points as a line
             screen.draw(pointList,DRAW_MODE.LINE,pen.getWidth(),pen.getColor());
             pointList = [];
        }
@@ -162,6 +180,6 @@ function setImage(){
         return;
     }
     for (const file of curFiles) { 
-        traceImg.addImageSrc(URL.createObjectURL(file));
+        traceImg.setImageSrc(URL.createObjectURL(file));
     }
 }

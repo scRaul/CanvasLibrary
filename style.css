@@ -6,15 +6,13 @@ body{
     height: 500px;
     margin: 10px auto;
     position: relative;
-    border: 2px solid red;
 }
 canvas{
     position: absolute;
 }
 #bottomCntrls{
-    display: flex;
+    display: none;
     flex-direction: column;
-
 }
 #verts{
     display: flex;
