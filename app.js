@@ -24,19 +24,20 @@ var increments = 500;
 var traceScreen = new Screen(500,500,increments,'canvas3');
 var gridScreen = new Screen(500,500,increments,'canvas2');
 var screen = new Screen(500,500,increments,'canvas');
-//clear screen to default color 
-gridScreen.clearColor();
-// draw a 25 x 25 grid 
-gridScreen.drawLineGrid(25,new Color(255,255,255,80));
-// render the grid
-gridScreen.render();
-// hidden util checkbox clicked 
-gridScreen.hide();
+
+// //clear screen to default color 
+// gridScreen.clearColor();
+// // draw a 25 x 25 grid 
+// gridScreen.drawLineGrid(25,new Color(255,255,255,80));
+// // render the grid
+// gridScreen.render();
+// // hidden util checkbox clicked 
+// gridScreen.hide();
 
 // create an object, this is where the background image will be 
 var traceImg = new ScreenObj();
 // scale image to size of grid 
-traceImg.setSize(increments/2,increments/2);
+traceImg.setSize(increments/10,increments/10);
 // make object tranparent 
 traceImg.setColor(new Color(0,0,0,0));
 // add and image to the object
@@ -60,6 +61,7 @@ screen.clearColor(); // set default clear color
 setPenColor(); // check color 
 toggleMode(); // check checkBoxes
 updateAndRender(); // begin 
+var deg = 0;
 async function updateAndRender(){
     var delay = 1000/fps;
     var startTime = Date.now();
@@ -67,13 +69,20 @@ async function updateAndRender(){
     screen.render();
     traceScreen.render();
     if(traceMode.checked){
-        // draw the traceImg object 
-        traceScreen.draw([traceImg],DRAW_MODE.SCREENOBJ,10,new Color(255));
+         traceScreen.draw([traceImg],DRAW_MODE.POINT,10,new Color(255));
+         traceScreen.draw([traceImg],DRAW_MODE.SCREENOBJ,10,new Color(255));
     }
     await new Promise(r => setTimeout(r,(startTime+delay)-Date.now() ));
     updateAndRender();
 }
 function drawInput(){
+    if(input.keys.d==true){
+        input.keys.d = false;
+        console.log(input.keys.d)
+        traceScreen.clearColor(new Color(0,0,0,0));
+        traceImg.rotate(deg);
+        deg++;
+    }
     if(input.mouseDown == true){
         fps = fpsMovement;
         var v = input.getMousePositon(); 
@@ -104,7 +113,6 @@ function drawInput(){
 function checkInput(){
     var e = document.getElementsByName('Shape');
     var n = document.getElementById('nInput').value;
-    var size =  document.getElementById('areaInput').value;
     var drawType = document.getElementsByName('dtype');
     var vertices = [];
     if(e[0].checked)
@@ -131,13 +139,11 @@ function checkInput(){
     } else{ 
         return;
     }
-    var tempPen = new ScreenObj(size,size);
-    tempPen.teleport(pen.getPos());
-    vertices  = getScaledPointList(vertices,screen,tempPen);
+    vertices  = getScaledPointList(vertices,screen,pen);
     var mode = DRAW_MODE.POINT;
     if(drawType[1].checked) mode = DRAW_MODE.LINE;
     if(drawType[2].checked) mode = DRAW_MODE.TRIANGE;
-    screen.draw(vertices,mode,pen.getWidth(),pen.getColor());
+    screen.draw(vertices,mode,1,pen.getColor());
 }
 function clearScreen(){
     screen.clearColor();
